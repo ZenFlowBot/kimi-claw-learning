@@ -5,6 +5,5 @@ pyyaml==6.0.2
 apscheduler==3.10.4
 python-multipart==0.0.17
 httpx==0.28.1
-smtplib2==0.2.1
 jinja2==3.1.4
 python-dateutil==2.9.0
