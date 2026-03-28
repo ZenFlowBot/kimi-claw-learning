@@ -24,7 +24,7 @@ def list_todos(status: Optional[str] = Query(None), priority: Optional[str] = Qu
 @router.post("", response_model=Todo)
 def create_todo(body: TodoCreate):
     todo = Todo(**body.model_dump())
-    storage.save_todo(todo.model_dump())
+    storage.save_todo(todo.model_dump(mode='json'))
     return todo
 
 

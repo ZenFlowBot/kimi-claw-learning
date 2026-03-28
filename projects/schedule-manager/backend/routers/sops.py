@@ -21,7 +21,7 @@ def list_sops(category: Optional[str] = Query(None), tag: Optional[str] = Query(
 @router.post("", response_model=SOP)
 def create_sop(body: SOPCreate):
     sop = SOP(**body.model_dump())
-    storage.save_sop(sop.model_dump())
+    storage.save_sop(sop.model_dump(mode='json'))
     return sop
 
 

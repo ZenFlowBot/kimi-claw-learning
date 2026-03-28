@@ -16,7 +16,7 @@ def list_schedules(period: str = Query(...), period_key: str = Query(...)):
 @router.post("", response_model=ScheduleItem)
 def create_schedule(body: ScheduleItemCreate):
     item = ScheduleItem(**body.model_dump())
-    storage.save_schedule(item.model_dump())
+    storage.save_schedule(item.model_dump(mode='json'))
     return item
 
 
