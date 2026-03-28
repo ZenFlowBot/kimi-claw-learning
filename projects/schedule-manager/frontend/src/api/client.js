@@ -15,8 +15,8 @@ export const updateSchedule = (id, period, periodKey, data) =>
 export const deleteSchedule = (id, period, periodKey) =>
   api.delete(`/schedules/${id}`, { params: { period, period_key: periodKey } }).then(r => r.data)
 
-export const getDashboard = () =>
-  api.get('/schedules/dashboard').then(r => r.data)
+export const getDashboard = (date) =>
+  api.get('/schedules/dashboard', { params: date ? { date } : {} }).then(r => r.data)
 
 // ─── SOPs ─────────────────────────────────────────────────────────────────────
 export const getSops = (params = {}) =>

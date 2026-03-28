@@ -21,8 +21,12 @@ def create_schedule(body: ScheduleItemCreate):
 
 
 @router.get("/dashboard")
-def get_dashboard():
-    today = date.today()
+def get_dashboard(date_str: Optional[str] = Query(None, alias="date")):
+    try:
+        today = date.fromisoformat(date_str) if date_str else date.today()
+    except ValueError:
+        today = date.today()
+
     year = today.year
     month_key = f"{year}-{today.month:02d}"
     week_num = today.isocalendar()[1]
@@ -50,6 +54,7 @@ def get_dashboard():
         return result
 
     return {
+        "view_date": today_key,
         "today": active([i for i in all_items if i.get("period") == "day" and i.get("period_key") == today_key]),
         "this_week": active([i for i in all_items if i.get("period") == "week" and i.get("period_key") == week_key]),
         "this_month": active([i for i in all_items if i.get("period") == "month" and i.get("period_key") == month_key]),

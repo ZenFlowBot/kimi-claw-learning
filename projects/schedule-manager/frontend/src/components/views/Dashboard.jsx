@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { ChevronLeft, ChevronRight, CalendarDays } from 'lucide-react'
 import { getDashboard } from '../../api/client'
 import dayjs from 'dayjs'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
@@ -11,7 +12,7 @@ const PRIORITY_LABEL = { high: '高', medium: '中', low: '低' }
 function Section({ title, items, emptyText, color, onClick }) {
   return (
     <div className="card">
-      <div className={`flex items-center gap-2 mb-3`}>
+      <div className="flex items-center gap-2 mb-3">
         <span className={`w-2 h-2 rounded-full ${color}`} />
         <h3 className="font-semibold text-gray-800 text-sm">{title}</h3>
         <span className="ml-auto text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">{items.length}</span>
@@ -37,25 +38,53 @@ function Section({ title, items, emptyText, color, onClick }) {
 export default function Dashboard() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [viewDate, setViewDate] = useState(dayjs())
   const navigate = useNavigate()
 
   useEffect(() => {
-    getDashboard().then(d => { setData(d); setLoading(false) }).catch(() => setLoading(false))
-  }, [])
+    setLoading(true)
+    getDashboard(viewDate.format('YYYY-MM-DD'))
+      .then(d => { setData(d); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [viewDate])
+
+  const isToday = viewDate.format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD')
 
   if (loading) return <div className="text-center py-20 text-gray-400">加载中...</div>
   if (!data) return <div className="text-center py-20 text-red-400">加载失败，请检查后端服务</div>
 
-  const today = dayjs()
   const overdue = [...(data.overdue_items || []), ...(data.overdue_todos || [])]
 
   return (
     <div className="max-w-5xl mx-auto">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">总览仪表盘</h2>
-        <p className="text-gray-500 text-sm mt-1">
-          {today.format('YYYY年MM月DD日')} · 第 {today.week()} 周
-        </p>
+      {/* Header with date navigation */}
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">总览仪表盘</h2>
+          <p className="text-gray-500 text-sm mt-1">
+            {viewDate.format('YYYY年MM月DD日')} · 第 {viewDate.week()} 周
+            {!isToday && <span className="ml-2 text-xs text-orange-500">（非今日）</span>}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setViewDate(d => d.subtract(1, 'day'))} className="btn-ghost p-2">
+            <ChevronLeft size={16} />
+          </button>
+          <input
+            type="date"
+            value={viewDate.format('YYYY-MM-DD')}
+            onChange={e => e.target.value && setViewDate(dayjs(e.target.value))}
+            className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button onClick={() => setViewDate(d => d.add(1, 'day'))} className="btn-ghost p-2">
+            <ChevronRight size={16} />
+          </button>
+          {!isToday && (
+            <button onClick={() => setViewDate(dayjs())} className="btn-ghost text-xs flex items-center gap-1 border border-gray-200 px-3 py-1.5">
+              <CalendarDays size={13} /> 回到今天
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Overdue alert */}
@@ -70,16 +99,12 @@ export default function Dashboard() {
       {/* Stats row */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {[
-          { label: '今日事项', count: data.today?.length || 0, color: 'text-blue-600 bg-blue-50', path: '/day' },
+          { label: '当日事项', count: data.today?.length || 0, color: 'text-blue-600 bg-blue-50', path: '/day' },
           { label: '本周事项', count: data.this_week?.length || 0, color: 'text-purple-600 bg-purple-50', path: '/week' },
           { label: '本月事项', count: data.this_month?.length || 0, color: 'text-green-600 bg-green-50', path: '/month' },
-          { label: '待办清单', count: data.pending_todos?.length || 0, color: 'text-orange-600 bg-orange-50', path: '/todos' },
+          { label: '临时待办', count: data.pending_todos?.length || 0, color: 'text-orange-600 bg-orange-50', path: '/todos' },
         ].map(stat => (
-          <div
-            key={stat.label}
-            className="card cursor-pointer hover:shadow-md transition-shadow"
-            onClick={() => navigate(stat.path)}
-          >
+          <div key={stat.label} className="card cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate(stat.path)}>
             <div className={`text-2xl font-bold ${stat.color.split(' ')[0]} ${stat.color.split(' ')[1]} w-10 h-10 rounded-lg flex items-center justify-center mb-2`}>
               {stat.count}
             </div>
@@ -90,24 +115,18 @@ export default function Dashboard() {
 
       {/* Sections */}
       <div className="grid grid-cols-2 gap-4 mb-4">
-        <Section title="今日待办" items={data.today || []} emptyText="今天没有日程事项" color="bg-blue-500"
-          onClick={() => navigate('/day')} />
-        <Section title="本周事项" items={data.this_week || []} emptyText="本周没有周计划" color="bg-purple-500"
-          onClick={() => navigate('/week')} />
+        <Section title="当日待办" items={data.today || []} emptyText="当天没有日程事项" color="bg-blue-500" onClick={() => navigate('/day')} />
+        <Section title="本周事项" items={data.this_week || []} emptyText="本周没有周计划" color="bg-purple-500" onClick={() => navigate('/week')} />
       </div>
 
       <div className="grid grid-cols-3 gap-4 mb-4">
-        <Section title="本月计划" items={data.this_month || []} emptyText="本月暂无计划" color="bg-green-500"
-          onClick={() => navigate('/month')} />
-        <Section title="本季度目标" items={data.this_quarter || []} emptyText="本季度暂无目标" color="bg-yellow-500"
-          onClick={() => navigate('/quarter')} />
-        <Section title="全年规划" items={data.this_year || []} emptyText="年度规划暂为空" color="bg-red-500"
-          onClick={() => navigate('/year')} />
+        <Section title="本月计划" items={data.this_month || []} emptyText="本月暂无计划" color="bg-green-500" onClick={() => navigate('/month')} />
+        <Section title="本季度目标" items={data.this_quarter || []} emptyText="本季度暂无目标" color="bg-yellow-500" onClick={() => navigate('/quarter')} />
+        <Section title="全年规划" items={data.this_year || []} emptyText="年度规划暂为空" color="bg-red-500" onClick={() => navigate('/year')} />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <Section title="临时待办" items={data.pending_todos || []} emptyText="没有临时待办" color="bg-orange-500"
-          onClick={() => navigate('/todos')} />
+        <Section title="临时待办" items={data.pending_todos || []} emptyText="没有临时待办" color="bg-orange-500" onClick={() => navigate('/todos')} />
         <Section title="逾期事项" items={overdue} emptyText="暂无逾期事项 👍" color="bg-red-600" />
       </div>
     </div>
