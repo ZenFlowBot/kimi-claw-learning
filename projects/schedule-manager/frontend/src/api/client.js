@@ -47,6 +47,25 @@ export const updateTodo = (id, data) =>
 export const deleteTodo = (id) =>
   api.delete(`/todos/${id}`).then(r => r.data)
 
+// ─── Recurring Templates ──────────────────────────────────────────────────────
+export const getRecurring = (periodType) =>
+  api.get('/recurring', { params: periodType ? { period_type: periodType } : {} }).then(r => r.data)
+
+export const createRecurring = (data) =>
+  api.post('/recurring', data).then(r => r.data)
+
+export const updateRecurring = (id, data) =>
+  api.put(`/recurring/${id}`, data).then(r => r.data)
+
+export const deleteRecurring = (id) =>
+  api.delete(`/recurring/${id}`).then(r => r.data)
+
+export const getCompletions = (periodKey) =>
+  api.get(`/recurring/completions/${periodKey}`).then(r => r.data)
+
+export const toggleCompletion = (periodKey, templateId, done) =>
+  api.post(`/recurring/completions/${periodKey}/${templateId}`, null, { params: { done } }).then(r => r.data)
+
 // ─── Reminders ────────────────────────────────────────────────────────────────
 export const getReminderSettings = () =>
   api.get('/reminders/settings').then(r => r.data)

@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-from routers import schedules, sops, todos, reminders
+from routers import schedules, sops, todos, reminders, recurring
 from services import scheduler
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(levelname)s %(message)s")
@@ -36,6 +36,7 @@ app.include_router(schedules.router)
 app.include_router(sops.router)
 app.include_router(todos.router)
 app.include_router(reminders.router)
+app.include_router(recurring.router)
 
 # Serve React frontend from /dist if it exists
 dist_dir = Path(__file__).parent.parent / "frontend" / "dist"

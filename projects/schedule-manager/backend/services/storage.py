@@ -195,3 +195,65 @@ def load_reminder_settings() -> Dict:
 def save_reminder_settings(settings: Dict) -> Dict:
     _save(_REMINDER_FILE, {"settings": settings})
     return settings
+
+
+# ─── Recurring Templates Storage ─────────────────────────────────────────────
+
+_RECURRING_FILE = DATA_DIR / "recurring_templates.yaml"
+
+
+def list_recurring(period_type: Optional[str] = None) -> List[Dict]:
+    data = _load(_RECURRING_FILE)
+    items = list(data.get("templates", {}).values())
+    if period_type:
+        items = [i for i in items if i.get("period_type") == period_type]
+    return items
+
+
+def get_recurring(template_id: str) -> Optional[Dict]:
+    data = _load(_RECURRING_FILE)
+    return data.get("templates", {}).get(template_id)
+
+
+def save_recurring(template: Dict) -> Dict:
+    data = _load(_RECURRING_FILE)
+    if "templates" not in data:
+        data["templates"] = {}
+    data["templates"][template["id"]] = template
+    _save(_RECURRING_FILE, data)
+    return template
+
+
+def delete_recurring(template_id: str) -> bool:
+    data = _load(_RECURRING_FILE)
+    templates = data.get("templates", {})
+    if template_id not in templates:
+        return False
+    del templates[template_id]
+    data["templates"] = templates
+    _save(_RECURRING_FILE, data)
+    return True
+
+
+# ─── Recurring Completions (per period_key) ───────────────────────────────────
+
+def _completion_path(period_key: str) -> Path:
+    return DATA_DIR / "recurring_completions" / f"{period_key}.yaml"
+
+
+def get_completions(period_key: str) -> List[str]:
+    """Return list of recurring template IDs marked done for this period."""
+    data = _load(_completion_path(period_key))
+    return data.get("completed", [])
+
+
+def set_completion(period_key: str, template_id: str, done: bool) -> None:
+    path = _completion_path(period_key)
+    data = _load(path)
+    completed = set(data.get("completed", []))
+    if done:
+        completed.add(template_id)
+    else:
+        completed.discard(template_id)
+    data["completed"] = list(completed)
+    _save(path, data)

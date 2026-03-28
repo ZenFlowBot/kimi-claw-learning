@@ -141,6 +141,29 @@ class ReminderSettings(BaseModel):
     webhook_type: str = "dingtalk"       # dingtalk | wecom | slack
 
 
+# ─── Recurring Templates ─────────────────────────────────────────────────────
+
+class RecurringTemplateCreate(BaseModel):
+    title: str
+    description: Optional[str] = ""
+    period_type: str          # "week" | "month" | "day" | "quarter" | "year"
+    priority: Priority = Priority.medium
+    tags: List[str] = []
+
+
+class RecurringTemplate(RecurringTemplateCreate):
+    id: str = Field(default_factory=gen_id)
+    created_at: str = Field(default_factory=lambda: datetime.now().isoformat())
+    updated_at: str = Field(default_factory=lambda: datetime.now().isoformat())
+
+
+class RecurringTemplateUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    priority: Optional[Priority] = None
+    tags: Optional[List[str]] = None
+
+
 # ─── Dashboard ────────────────────────────────────────────────────────────────
 
 class DashboardData(BaseModel):

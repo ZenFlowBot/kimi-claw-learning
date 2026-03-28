@@ -3,8 +3,8 @@
  * Handles: list, create, update status, delete.
  */
 import React, { useEffect, useState, useCallback } from 'react'
-import { Plus, Trash2, CheckCircle, Clock, Circle, XCircle, ChevronLeft, ChevronRight } from 'lucide-react'
-import { getSchedules, createSchedule, updateSchedule, deleteSchedule } from '../api/client'
+import { Plus, Trash2, CheckCircle, Clock, Circle, XCircle, ChevronLeft, ChevronRight, RefreshCw } from 'lucide-react'
+import { getSchedules, createSchedule, updateSchedule, deleteSchedule, getRecurring, createRecurring, deleteRecurring, getCompletions, toggleCompletion } from '../api/client'
 import ItemForm from './ItemForm'
 
 const PRIORITY_BADGE = { high: 'badge-high', medium: 'badge-medium', low: 'badge-low' }
@@ -24,12 +24,21 @@ export default function ScheduleView({ period, periodKey, title, onNavigate, ext
   const [showForm, setShowForm] = useState(false)
   const [editItem, setEditItem] = useState(null)
   const [filter, setFilter] = useState('all')
+  const [recurring, setRecurring] = useState([])
+  const [completions, setCompletions] = useState([])
+  const [showRecurringForm, setShowRecurringForm] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
     try {
-      const data = await getSchedules(period, periodKey)
+      const [data, rec, comp] = await Promise.all([
+        getSchedules(period, periodKey),
+        getRecurring(period),
+        getCompletions(periodKey),
+      ])
       setItems(data)
+      setRecurring(rec)
+      setCompletions(comp)
     } catch (e) {
       console.error(e)
     } finally {
@@ -60,6 +69,24 @@ export default function ScheduleView({ period, periodKey, title, onNavigate, ext
     if (!confirm(`确认删除「${item.title}」？`)) return
     await deleteSchedule(item.id, period, periodKey)
     load()
+  }
+
+  const handleRecurringSave = async (form) => {
+    await createRecurring({ ...form, period_type: period })
+    setShowRecurringForm(false)
+    load()
+  }
+
+  const handleRecurringDelete = async (template) => {
+    if (!confirm(`确认删除固定事项「${template.title}」？删除后所有周期都不再显示。`)) return
+    await deleteRecurring(template.id)
+    load()
+  }
+
+  const handleToggleCompletion = async (template) => {
+    const isDone = completions.includes(template.id)
+    await toggleCompletion(periodKey, template.id, !isDone)
+    setCompletions(prev => isDone ? prev.filter(id => id !== template.id) : [...prev, template.id])
   }
 
   const filtered = items.filter(i => {
@@ -113,6 +140,56 @@ export default function ScheduleView({ period, periodKey, title, onNavigate, ext
           </div>
         </div>
       )}
+
+      {/* Recurring templates section */}
+      <div className="card mb-4">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <RefreshCw size={14} className="text-blue-500" />
+            <span className="text-sm font-semibold text-gray-700">固定重复事项</span>
+            <span className="text-xs text-gray-400">每个{period === 'week' ? '周' : period === 'month' ? '月' : period === 'day' ? '天' : period === 'quarter' ? '季度' : '年'}自动出现</span>
+          </div>
+          <button onClick={() => setShowRecurringForm(v => !v)} className="text-xs text-blue-600 hover:text-blue-700 flex items-center gap-1">
+            <Plus size={12} /> 添加固定事项
+          </button>
+        </div>
+
+        {showRecurringForm && (
+          <div className="mb-3 p-3 bg-gray-50 rounded-lg">
+            <ItemForm
+              initial={{}}
+              onSave={handleRecurringSave}
+              onCancel={() => setShowRecurringForm(false)}
+              hideFields={['due_date', 'reminder_days_before']}
+            />
+          </div>
+        )}
+
+        {recurring.length === 0 && !showRecurringForm ? (
+          <p className="text-xs text-gray-400 text-center py-2">暂无固定事项，点击「添加固定事项」设置</p>
+        ) : (
+          <div className="space-y-1.5">
+            {recurring.map(t => {
+              const done = completions.includes(t.id)
+              return (
+                <div key={t.id} className={`flex items-center gap-2 group p-1.5 rounded-lg hover:bg-gray-50 ${done ? 'opacity-50' : ''}`}>
+                  <button onClick={() => handleToggleCompletion(t)} className="shrink-0">
+                    {done ? <CheckCircle size={16} className="text-green-500" /> : <Circle size={16} className="text-gray-300" />}
+                  </button>
+                  <span className={`flex-1 text-sm ${done ? 'line-through text-gray-400' : 'text-gray-700'}`}>{t.title}</span>
+                  <span className={PRIORITY_BADGE[t.priority]}>{PRIORITY_LABEL[t.priority]}</span>
+                  {t.tags?.map(tag => (
+                    <span key={tag} className="text-xs bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded-full">#{tag}</span>
+                  ))}
+                  <button onClick={() => handleRecurringDelete(t)} className="opacity-0 group-hover:opacity-100 text-gray-300 hover:text-red-500 transition-opacity">
+                    <Trash2 size={13} />
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
 
       {/* Filter tabs */}
       <div className="flex gap-2 mb-4">
