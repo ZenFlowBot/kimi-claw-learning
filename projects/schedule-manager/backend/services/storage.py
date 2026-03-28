@@ -9,9 +9,12 @@ from config import DATA_DIR
 def _load(path: Path) -> Dict[str, Any]:
     if not path.exists():
         return {}
-    with open(path, "r", encoding="utf-8") as f:
-        data = yaml.safe_load(f) or {}
-    return data
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f) or {}
+        return data
+    except yaml.YAMLError:
+        return {}
 
 
 def _save(path: Path, data: Dict[str, Any]) -> None:
