@@ -45,7 +45,7 @@ def update_sop(sop_id: str, body: SOPUpdate):
     sop = storage.get_sop(sop_id)
     if not sop:
         raise HTTPException(404, "SOP not found")
-    updates = {k: v for k, v in body.model_dump().items() if v is not None}
+    updates = {k: v for k, v in body.model_dump(mode='json').items() if v is not None}
     updates["updated_at"] = datetime.now().isoformat()
     updates["version"] = sop.get("version", 1) + 1
     sop.update(updates)

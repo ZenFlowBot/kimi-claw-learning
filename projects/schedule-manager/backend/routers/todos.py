@@ -41,7 +41,7 @@ def update_todo(todo_id: str, body: TodoUpdate):
     todo = storage.get_todo(todo_id)
     if not todo:
         raise HTTPException(404, "Todo not found")
-    updates = {k: v for k, v in body.model_dump().items() if v is not None}
+    updates = {k: v for k, v in body.model_dump(mode='json').items() if v is not None}
     updates["updated_at"] = datetime.now().isoformat()
     todo.update(updates)
     storage.save_todo(todo)

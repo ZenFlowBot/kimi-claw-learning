@@ -74,7 +74,7 @@ def update_schedule(item_id: str, body: ScheduleItemUpdate, period: str = Query(
     item = storage.get_schedule(period, period_key, item_id)
     if not item:
         raise HTTPException(404, "Item not found")
-    updates = {k: v for k, v in body.model_dump().items() if v is not None}
+    updates = {k: v for k, v in body.model_dump(mode='json').items() if v is not None}
     updates["updated_at"] = datetime.now().isoformat()
     item.update(updates)
     storage.save_schedule(item)
