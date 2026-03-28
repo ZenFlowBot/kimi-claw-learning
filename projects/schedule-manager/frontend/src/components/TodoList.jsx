@@ -3,7 +3,7 @@ import { Plus, Trash2, CheckCircle, Circle, Clock } from 'lucide-react'
 import { getTodos, createTodo, updateTodo, deleteTodo } from '../api/client'
 import ItemForm from './ItemForm'
 
-const STATUS_CYCLE = { pending: 'in_progress', in_progress: 'done', done: 'pending' }
+const STATUS_CYCLE = { pending: 'done', in_progress: 'done', done: 'pending' }
 const STATUS_ICON = {
   pending: <Circle size={16} className="text-gray-400" />,
   in_progress: <Clock size={16} className="text-blue-500" />,

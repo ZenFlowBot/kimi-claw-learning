@@ -9,7 +9,7 @@ import ItemForm from './ItemForm'
 
 const PRIORITY_BADGE = { high: 'badge-high', medium: 'badge-medium', low: 'badge-low' }
 const PRIORITY_LABEL = { high: '高', medium: '中', low: '低' }
-const STATUS_CYCLE = { pending: 'in_progress', in_progress: 'done', done: 'pending' }
+const STATUS_CYCLE = { pending: 'done', in_progress: 'done', done: 'pending' }
 const STATUS_ICON = {
   pending: <Circle size={16} className="text-gray-400" />,
   in_progress: <Clock size={16} className="text-blue-500" />,
