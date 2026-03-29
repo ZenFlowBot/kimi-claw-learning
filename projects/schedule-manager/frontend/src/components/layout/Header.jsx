@@ -14,7 +14,7 @@ export default function Header({ onToggleSidebar }) {
       <div className="flex-1" />
       <div className="text-sm text-gray-500">
         {now.format('YYYY年MM月DD日 dddd')}
-        <span className="ml-2 text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">
+        <span className="ml-2 text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded-full">
           第 {now.week()} 周
         </span>
       </div>

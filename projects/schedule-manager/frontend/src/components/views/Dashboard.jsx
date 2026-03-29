@@ -74,7 +74,7 @@ export default function Dashboard() {
             type="date"
             value={viewDate.format('YYYY-MM-DD')}
             onChange={e => e.target.value && setViewDate(dayjs(e.target.value))}
-            className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           <button onClick={() => setViewDate(d => d.add(1, 'day'))} className="btn-ghost p-2">
             <ChevronRight size={16} />
@@ -99,7 +99,7 @@ export default function Dashboard() {
       {/* Stats row */}
       <div className="grid grid-cols-4 gap-4 mb-6">
         {[
-          { label: '当日事项', count: data.today?.length || 0, color: 'text-blue-600 bg-blue-50', path: '/day' },
+          { label: '当日事项', count: data.today?.length || 0, color: 'text-green-600 bg-green-50', path: '/day' },
           { label: '本周事项', count: data.this_week?.length || 0, color: 'text-purple-600 bg-purple-50', path: '/week' },
           { label: '本月事项', count: data.this_month?.length || 0, color: 'text-green-600 bg-green-50', path: '/month' },
           { label: '临时待办', count: data.pending_todos?.length || 0, color: 'text-orange-600 bg-orange-50', path: '/todos' },

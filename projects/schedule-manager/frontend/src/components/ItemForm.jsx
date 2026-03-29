@@ -35,7 +35,7 @@ export default function ItemForm({ initial = {}, onSave, onCancel, hideFields = 
           required
           value={form.title}
           onChange={e => set('title', e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
           placeholder="输入事项标题..."
         />
       </div>
@@ -46,7 +46,7 @@ export default function ItemForm({ initial = {}, onSave, onCancel, hideFields = 
           value={form.description}
           onChange={e => set('description', e.target.value)}
           rows={3}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
           placeholder="详细描述..."
         />
       </div>
@@ -57,7 +57,7 @@ export default function ItemForm({ initial = {}, onSave, onCancel, hideFields = 
           <select
             value={form.priority}
             onChange={e => set('priority', e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             {PRIORITIES.map(p => (
               <option key={p.value} value={p.value}>{p.label}</option>
@@ -72,7 +72,7 @@ export default function ItemForm({ initial = {}, onSave, onCancel, hideFields = 
               type="date"
               value={form.due_date}
               onChange={e => set('due_date', e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
         )}
@@ -84,7 +84,7 @@ export default function ItemForm({ initial = {}, onSave, onCancel, hideFields = 
           <input
             value={form.tags}
             onChange={e => set('tags', e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             placeholder="工作, 个人, 重要..."
           />
         </div>
@@ -97,7 +97,7 @@ export default function ItemForm({ initial = {}, onSave, onCancel, hideFields = 
               max={30}
               value={form.reminder_days_before}
               onChange={e => set('reminder_days_before', parseInt(e.target.value) || 0)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
         )}

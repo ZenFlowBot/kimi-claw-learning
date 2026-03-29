@@ -12,7 +12,7 @@ const PRIORITY_LABEL = { high: '高', medium: '中', low: '低' }
 const STATUS_CYCLE = { pending: 'done', in_progress: 'done', done: 'pending' }
 const STATUS_ICON = {
   pending: <Circle size={16} className="text-gray-400" />,
-  in_progress: <Clock size={16} className="text-blue-500" />,
+  in_progress: <Clock size={16} className="text-green-500" />,
   done: <CheckCircle size={16} className="text-green-500" />,
   cancelled: <XCircle size={16} className="text-gray-300" />,
 }
@@ -145,11 +145,11 @@ export default function ScheduleView({ period, periodKey, title, onNavigate, ext
       <div className="card mb-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <RefreshCw size={14} className="text-blue-500" />
+            <RefreshCw size={14} className="text-green-500" />
             <span className="text-sm font-semibold text-gray-700">固定重复事项</span>
             <span className="text-xs text-gray-400">每个{period === 'week' ? '周' : period === 'month' ? '月' : period === 'day' ? '天' : period === 'quarter' ? '季度' : '年'}自动出现</span>
           </div>
-          <button onClick={() => setShowRecurringForm(v => !v)} className="text-xs text-blue-600 hover:text-blue-700 flex items-center gap-1">
+          <button onClick={() => setShowRecurringForm(v => !v)} className="text-xs text-green-600 hover:text-green-700 flex items-center gap-1">
             <Plus size={12} /> 添加固定事项
           </button>
         </div>
@@ -198,7 +198,7 @@ export default function ScheduleView({ period, periodKey, title, onNavigate, ext
             key={v}
             onClick={() => setFilter(v)}
             className={`text-sm px-3 py-1.5 rounded-lg transition-colors ${
-              filter === v ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'
+              filter === v ? 'bg-green-600 text-white' : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
             {l}
@@ -268,7 +268,7 @@ export default function ScheduleView({ period, periodKey, title, onNavigate, ext
                 <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
                   <button
                     onClick={() => { setEditItem(item); setShowForm(true) }}
-                    className="text-xs text-gray-400 hover:text-blue-600 px-2 py-1 rounded"
+                    className="text-xs text-gray-400 hover:text-green-600 px-2 py-1 rounded"
                   >
                     编辑
                   </button>

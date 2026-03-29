@@ -16,7 +16,7 @@ function StepEditor({ steps, onChange }) {
       {steps.map((s, i) => (
         <div key={i} className="border border-gray-200 rounded-lg p-3 space-y-2">
           <div className="flex items-center gap-2">
-            <span className="w-6 h-6 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
+            <span className="w-6 h-6 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-bold shrink-0">{i + 1}</span>
             <input
               value={s.action}
               onChange={e => update(i, 'action', e.target.value)}
@@ -34,7 +34,7 @@ function StepEditor({ steps, onChange }) {
           />
         </div>
       ))}
-      <button onClick={add} className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1 mt-1">
+      <button onClick={add} className="text-sm text-green-600 hover:text-green-700 flex items-center gap-1 mt-1">
         <Plus size={14} /> 添加步骤
       </button>
     </div>
@@ -109,7 +109,7 @@ function SOPCard({ sop, onEdit, onDelete }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <h3 className="font-semibold text-gray-900">{sop.title}</h3>
-            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">{sop.category}</span>
+            <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">{sop.category}</span>
             <span className="text-xs text-gray-400">v{sop.version}</span>
             {sop.tags?.map(t => (
               <span key={t} className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">#{t}</span>
@@ -132,7 +132,7 @@ function SOPCard({ sop, onEdit, onDelete }) {
         <div className="mt-4 space-y-2 border-t border-gray-100 pt-4">
           {sop.steps.map((step, i) => (
             <div key={i} className="flex gap-3">
-              <span className="w-6 h-6 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">{step.step}</span>
+              <span className="w-6 h-6 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">{step.step}</span>
               <div>
                 <p className="text-sm font-medium text-gray-800">{step.action}</p>
                 {step.detail && <p className="text-xs text-gray-500 mt-0.5">{step.detail}</p>}
@@ -190,7 +190,7 @@ export default function SOPManager() {
       <div className="flex gap-2 mb-4 flex-wrap">
         {['all', ...categories].map(cat => (
           <button key={cat} onClick={() => setFilter(cat)}
-            className={`text-sm px-3 py-1.5 rounded-lg transition-colors ${filter === cat ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
+            className={`text-sm px-3 py-1.5 rounded-lg transition-colors ${filter === cat ? 'bg-green-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
             {cat === 'all' ? '全部' : cat}
           </button>
         ))}

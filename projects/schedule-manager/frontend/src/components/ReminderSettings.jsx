@@ -70,7 +70,7 @@ export default function ReminderSettings() {
                 type="checkbox"
                 checked={settings.channels.includes(ch.id)}
                 onChange={() => toggleChannel(ch.id)}
-                className="w-4 h-4 text-blue-600 rounded"
+                className="w-4 h-4 text-green-600 rounded"
               />
               <span className="text-lg">{ch.icon}</span>
               <div>

@@ -6,7 +6,7 @@ import ItemForm from './ItemForm'
 const STATUS_CYCLE = { pending: 'done', in_progress: 'done', done: 'pending' }
 const STATUS_ICON = {
   pending: <Circle size={16} className="text-gray-400" />,
-  in_progress: <Clock size={16} className="text-blue-500" />,
+  in_progress: <Clock size={16} className="text-green-500" />,
   done: <CheckCircle size={16} className="text-green-500" />,
 }
 const PRIORITY_BADGE = { high: 'badge-high', medium: 'badge-medium', low: 'badge-low' }
@@ -75,7 +75,7 @@ export default function TodoList() {
       <div className="flex gap-2 mb-4">
         {[['all', '全部'], ['active', '待处理'], ['done', '已完成']].map(([v, l]) => (
           <button key={v} onClick={() => setFilter(v)}
-            className={`text-sm px-3 py-1.5 rounded-lg transition-colors ${filter === v ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
+            className={`text-sm px-3 py-1.5 rounded-lg transition-colors ${filter === v ? 'bg-green-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
             {l}
           </button>
         ))}
@@ -122,7 +122,7 @@ export default function TodoList() {
                 {todo.due_date && <p className="text-xs text-gray-400 mt-0.5">截止: {todo.due_date}</p>}
               </div>
               <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                <button onClick={() => { setEditTodo(todo); setShowForm(true) }} className="text-xs text-gray-400 hover:text-blue-600 px-2 py-1 rounded">编辑</button>
+                <button onClick={() => { setEditTodo(todo); setShowForm(true) }} className="text-xs text-gray-400 hover:text-green-600 px-2 py-1 rounded">编辑</button>
                 <button onClick={() => handleDelete(todo)} className="text-xs text-gray-400 hover:text-red-600 px-2 py-1 rounded"><Trash2 size={14} /></button>
               </div>
             </div>
